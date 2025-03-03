@@ -287,7 +287,7 @@ class PostResource extends SkyResource
             class_exists(\LaraZeus\Helen\HelenServiceProvider::class)
             && ! config('zeus-sky.headless')
         ) {
-            //@phpstan-ignore-next-line
+            // @phpstan-ignore-next-line
             $action[] = \LaraZeus\Helen\Actions\ShortUrlAction::make('get-link')
                 ->distUrl(fn (Post $record): string => route(SkyPlugin::get()->getRouteNamePrefix() . 'post', ['slug' => $record]));
         }
