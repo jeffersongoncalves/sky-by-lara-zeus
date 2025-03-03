@@ -33,7 +33,7 @@
         "doctrine/dbal": "^3.5|^4.0",
         "filament/spatie-laravel-media-library-plugin": "^3.0",
         "filament/spatie-laravel-tags-plugin": "^3.0",
-        "lara-zeus/core": "^3.1",
+        "lara-zeus/core": "^3.2",
         "lara-zeus/filament-plugin-tools": "^1.0",
         "spatie/laravel-medialibrary": "^11.0",
         "spatie/laravel-sluggable": "^3.3",
