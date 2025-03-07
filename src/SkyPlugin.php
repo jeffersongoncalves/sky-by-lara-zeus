@@ -11,6 +11,7 @@ use LaraZeus\FilamentPluginTools\Concerns\CanHideResources;
 use LaraZeus\FilamentPluginTools\Concerns\HasModels;
 use LaraZeus\FilamentPluginTools\Concerns\HasNavigationGroupLabel;
 use LaraZeus\FilamentPluginTools\Concerns\HasRouteNamePrefix;
+use LaraZeus\FilamentPluginTools\Concerns\HasUploads;
 use LaraZeus\Sky\Filament\Resources\FaqResource;
 use LaraZeus\Sky\Filament\Resources\LibraryResource;
 use LaraZeus\Sky\Filament\Resources\NavigationResource;
@@ -27,6 +28,7 @@ final class SkyPlugin implements Plugin
     use HasModels;
     use HasNavigationGroupLabel;
     use HasRouteNamePrefix;
+    use HasUploads;
 
     protected Closure | string $navigationGroupLabel = 'Sky';
 
