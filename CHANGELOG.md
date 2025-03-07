@@ -337,7 +337,7 @@ Since [tiptap editor](https://github.com/awcodes/filament-tiptap-editor) still i
 #### ⚠️⚠️ the configuration for models has been changed to:
 
 ```php
-->skyModels([
+->models([
         'Faq' => \LaraZeus\Sky\Models\Faq::class,
         'Post' => \LaraZeus\Sky\Models\Post::class,
         'PostStatus' => \LaraZeus\Sky\Models\PostStatus::class,
