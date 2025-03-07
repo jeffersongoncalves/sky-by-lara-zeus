@@ -29,7 +29,7 @@ SkyPlugin::make()
 
     // the default models, by default Sky will read from the config file 'zeus-sky'.
     // but if you want to customize the models per panel, you can do it here 
-    ->skyModels([
+    ->models([
         // ...
         'Tag' => \LaraZeus\Sky\Models\Tag::class,
     ])
@@ -151,7 +151,7 @@ return [
     /**
      * you can overwrite any model and use your own
      * you can also configure the model per panel in your panel provider using:
-     * ->skyModels([ ... ])
+     * ->models([ ... ])
      */
     'models' => [
         'Faq' => \LaraZeus\Sky\Models\Faq::class,
