@@ -2,6 +2,7 @@
 
 namespace LaraZeus\Sky\Filament\Resources;
 
+use Closure;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -14,11 +15,11 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use LaraZeus\Sky\Filament\Resources\TagResource\Pages;
 use LaraZeus\Sky\Models\Tag;
 use LaraZeus\Sky\SkyPlugin;
+use Livewire\Component as Livewire;
 
 class TagResource extends SkyResource
 {
@@ -47,7 +48,32 @@ class TagResource extends SkyResource
                                 $set('slug', Str::slug($state));
                             }),
                         TextInput::make('slug')
-                            ->unique(ignorable: fn (?Model $record): ?Model => $record)
+                            ->rules([
+                                function (?Tag $record, Livewire $livewire): Closure {
+                                    return static function (string $attribute, $value, Closure $fail) use (
+                                        $record,
+                                        $livewire
+                                    ) {
+                                        if (Tag::query()
+                                            ->where('id', '!=', $record?->id)
+                                            // @phpstan-ignore-next-line
+                                            ->where("slug->{$livewire->activeLocale}", $value)
+                                            ->exists()
+                                        ) {
+                                            $fail('The :attribute is already exist.');
+                                        }
+                                    };
+                                },
+                            ])
+                            /*->unique(
+                                //column: 'slug.en',
+                                ignorable: fn (?Model $record): ?Model => $record,
+                                modifyRuleUsing: function (Unique $rule) {
+                                    return $rule
+                                        ->where('slug->en', '111')
+                                        ;
+                                }
+                            )*/
                             ->required()
                             ->maxLength(255),
                         Select::make('type')
