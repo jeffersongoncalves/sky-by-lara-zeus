@@ -2,6 +2,7 @@
 
 namespace LaraZeus\Sky;
 
+use Closure;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
@@ -16,17 +17,16 @@ use LaraZeus\Sky\Filament\Resources\NavigationResource;
 use LaraZeus\Sky\Filament\Resources\PageResource;
 use LaraZeus\Sky\Filament\Resources\PostResource;
 use LaraZeus\Sky\Filament\Resources\TagResource;
-use Closure;
 
 final class SkyPlugin implements Plugin
 {
     use CanDisableBadges;
+    use CanHideResources;
     use Configuration;
     use EvaluatesClosures;
-    use HasRouteNamePrefix;
     use HasModels;
     use HasNavigationGroupLabel;
-    use CanHideResources;
+    use HasRouteNamePrefix;
 
     protected Closure | string $navigationGroupLabel = 'Sky';
 
