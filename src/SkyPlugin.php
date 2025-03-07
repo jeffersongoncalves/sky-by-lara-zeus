@@ -6,6 +6,9 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
 use LaraZeus\FilamentPluginTools\Concerns\CanDisableBadges;
+use LaraZeus\FilamentPluginTools\Concerns\CanHideResources;
+use LaraZeus\FilamentPluginTools\Concerns\HasModels;
+use LaraZeus\FilamentPluginTools\Concerns\HasNavigationGroupLabel;
 use LaraZeus\FilamentPluginTools\Concerns\HasRouteNamePrefix;
 use LaraZeus\Sky\Filament\Resources\FaqResource;
 use LaraZeus\Sky\Filament\Resources\LibraryResource;
@@ -13,6 +16,7 @@ use LaraZeus\Sky\Filament\Resources\NavigationResource;
 use LaraZeus\Sky\Filament\Resources\PageResource;
 use LaraZeus\Sky\Filament\Resources\PostResource;
 use LaraZeus\Sky\Filament\Resources\TagResource;
+use Closure;
 
 final class SkyPlugin implements Plugin
 {
@@ -20,6 +24,11 @@ final class SkyPlugin implements Plugin
     use Configuration;
     use EvaluatesClosures;
     use HasRouteNamePrefix;
+    use HasModels;
+    use HasNavigationGroupLabel;
+    use CanHideResources;
+
+    protected Closure | string $navigationGroupLabel = 'Sky';
 
     public function getId(): string
     {
