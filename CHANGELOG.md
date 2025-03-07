@@ -2,6 +2,15 @@
 
 All notable changes to `sky` will be documented in this file
 
+## v3.4.19 - 2025-03-07
+
+### What's Changed
+
+* remove doctrine/dbal by @atmonshi in https://github.com/lara-zeus/sky/pull/226
+* refactor plugin configuration and use filament tools package by @atmonshi in https://github.com/lara-zeus/sky/pull/228
+
+**Full Changelog**: https://github.com/lara-zeus/sky/compare/v3.4.18...v3.4.19
+
 ## v3.4.18 - 2025-03-03
 
 ### What's Changed
@@ -257,6 +266,7 @@ in your panel provider you can hide any resource from the side nav
 
 
 
+
 ```
 for more check out the docs:
 https://larazeus.com/docs/sky/v3/getting-started/configuration
@@ -365,6 +375,7 @@ Since [tiptap editor](https://github.com/awcodes/filament-tiptap-editor) still i
 
 
 
+
 ```
 #### What's Changed
 
@@ -439,11 +450,13 @@ Make sure to add this to your config:
 
 
 
+
 ```
 You can copy that class and create your own parser, too, then add it to the array, and Sky will loop them all.
 
 ```I
 Of course, it will be visible only if you install Sky with Bolt :)
+
 
 
 
@@ -521,7 +534,6 @@ Of course, it will be visible only if you install Sky with Bolt :)
 ### New Contributors
 - @chahal26 made their first contribution in https://github.com/lara-zeus/sky/pull/66
 **Full Changelog**: https://github.com/lara-zeus/sky/compare/2.3.7...2.4.0
-
 ## 2.3.7 - 2022-11-12
 
 ### What's Changed
