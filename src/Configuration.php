@@ -9,13 +9,6 @@ use Illuminate\Support\Str;
 
 trait Configuration
 {
-    protected Closure | string $navigationGroupLabel = 'Sky';
-
-    /**
-     * you can overwrite any model and use your own
-     */
-    protected array $skyModels = [];
-
     protected ?array $libraryTypes = [
         'FILE' => 'File',
         'IMAGE' => 'Image',
@@ -28,18 +21,6 @@ trait Configuration
         'library' => 'Library',
         'faq' => 'Faq',
     ];
-
-    protected array $hiddenResources = [];
-
-    /**
-     * where to upload all files when using the file upload field
-     */
-    protected Closure | string $uploadDisk = 'public';
-
-    /**
-     * the directory name
-     */
-    protected Closure | string $uploadDirectory = '';
 
     protected bool $hasPostResource = true;
 
@@ -57,61 +38,9 @@ trait Configuration
 
     protected array | Closure $extraFields = [];
 
-    public function navigationGroupLabel(Closure | string $lable): static
-    {
-        $this->navigationGroupLabel = $lable;
+    private ?array $translatedLibraryTypes = null;
 
-        return $this;
-    }
-
-    public function getNavigationGroupLabel(): Closure | string
-    {
-        return $this->evaluate($this->navigationGroupLabel);
-    }
-
-    public function skyModels(array $models): static
-    {
-        $this->skyModels = $models;
-
-        return $this;
-    }
-
-    public function getSkyModels(): array
-    {
-        return $this->skyModels;
-    }
-
-    public static function getModel(string $model): string
-    {
-        return array_merge(
-            config('zeus-sky.models'),
-            (new static)::get()->getSkyModels()
-        )[$model];
-    }
-
-    public function uploadDisk(Closure | string $disk): static
-    {
-        $this->uploadDisk = $disk;
-
-        return $this;
-    }
-
-    public function getUploadDisk(): Closure | string
-    {
-        return $this->evaluate($this->uploadDisk);
-    }
-
-    public function uploadDirectory(Closure | string $dir): static
-    {
-        $this->uploadDirectory = $dir;
-
-        return $this;
-    }
-
-    public function getUploadDirectory(): Closure | string
-    {
-        return $this->evaluate($this->uploadDirectory);
-    }
+    private ?array $translatedTagTypes = null;
 
     public function postResource(bool $condition = true): static
     {
@@ -192,8 +121,6 @@ trait Configuration
         return $this;
     }
 
-    private ?array $translatedLibraryTypes = null;
-
     public function getLibraryTypes(): ?array
     {
         if ($this->translatedLibraryTypes === null && $this->libraryTypes && function_exists('__')) {
@@ -209,8 +136,6 @@ trait Configuration
 
         return $this;
     }
-
-    private ?array $translatedTagTypes = null;
 
     public function getTagTypes(): ?array
     {
@@ -266,17 +191,5 @@ trait Configuration
             ],
             $this->itemTypes
         );
-    }
-
-    public function hiddenResources(): array
-    {
-        return $this->hiddenResources;
-    }
-
-    public function hideResources(array $resources = []): static
-    {
-        $this->hiddenResources = $resources;
-
-        return $this;
     }
 }
