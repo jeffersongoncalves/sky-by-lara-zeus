@@ -9,6 +9,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
@@ -50,113 +51,122 @@ class PostResource extends SkyResource
 
     public static function form(Form $form): Form
     {
-        return $form->schema([
-            Tabs::make('post_tabs')->schema([
-                Tabs\Tab::make(__('Title & Content'))->schema([
-                    TextInput::make('title')
-                        ->label(__('Post Title'))
-                        ->required()
-                        ->maxLength(255)
-                        ->live(onBlur: true)
-                        ->afterStateUpdated(function (Set $set, $state, $context) {
-                            if ($context === 'edit') {
-                                return;
-                            }
+        return $form
+            ->schema([
+                Tabs::make('post_tabs')
+                    ->schema([
+                        Tab::make(__('Title & Content'))
+                            ->schema([
+                                TextInput::make('title')
+                                    ->label(__('Post Title'))
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function (Set $set, $state, $context) {
+                                        if ($context === 'edit') {
+                                            return;
+                                        }
 
-                            $set('slug', Str::slug($state));
-                        }),
-                    config('zeus-sky.editor')::component()
-                        ->label(__('Post Content')),
-                ]),
+                                        $set('slug', Str::slug($state));
+                                    }),
+                                config('zeus-sky.editor')::component()
+                                    ->label(__('Post Content')),
+                            ]),
 
-                Tabs\Tab::make(__('SEO'))->schema([
-                    Placeholder::make(__('SEO Settings')),
+                        Tab::make(__('SEO'))
+                            ->schema([
+                                Placeholder::make(__('SEO Settings')),
 
-                    Hidden::make('user_id')
-                        ->default(auth()->user()->id)
-                        ->required(),
+                                Hidden::make('user_id')
+                                    ->default(auth()->user()?->id ?? 0)
+                                    ->required(),
 
-                    Hidden::make('post_type')
-                        ->default('post')
-                        ->required(),
+                                Hidden::make('post_type')
+                                    ->default('post')
+                                    ->required(),
 
-                    Textarea::make('description')
-                        ->maxLength(255)
-                        ->label(__('Description'))
-                        ->hint(__('Write an excerpt for your post')),
+                                Textarea::make('description')
+                                    ->maxLength(255)
+                                    ->label(__('Description'))
+                                    ->hint(__('Write an excerpt for your post')),
 
-                    TextInput::make('slug')
-                        ->unique(ignorable: fn (?Post $record): ?Post => $record)
-                        ->required()
-                        ->maxLength(255)
-                        ->label(__('Post Slug')),
-                ]),
-                Tabs\Tab::make(__('Tags'))->schema([
-                    Placeholder::make(__('Tags and Categories')),
-                    SpatieTagsInput::make('tags')
-                        ->type('tag')
-                        ->label(__('Tags')),
+                                TextInput::make('slug')
+                                    ->unique(ignoreRecord: true)
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->label(__('Post Slug')),
+                            ]),
 
-                    SpatieTagsInput::make('category')
-                        ->type('category')
-                        ->label(__('Categories')),
-                ]),
+                        Tab::make(__('Tags'))
+                            ->schema([
+                                Placeholder::make(__('Tags and Categories')),
+                                SpatieTagsInput::make('tags')
+                                    ->type('tag')
+                                    ->label(__('Tags')),
 
-                Tabs\Tab::make(__('Visibility'))->schema([
-                    Placeholder::make(__('Visibility Options')),
-                    Select::make('status')
-                        ->label(__('status'))
-                        ->default('publish')
-                        ->required()
-                        ->live()
-                        ->options(SkyPlugin::get()->getModel('PostStatus')::pluck('label', 'name')),
+                                SpatieTagsInput::make('category')
+                                    ->type('category')
+                                    ->label(__('Categories')),
+                            ]),
 
-                    TextInput::make('password')
-                        ->label(__('Password'))
-                        ->visible(fn (Get $get): bool => $get('status') === 'private'),
+                        Tab::make(__('Visibility'))
+                            ->schema([
+                                Placeholder::make(__('Visibility Options')),
+                                Select::make('status')
+                                    ->label(__('status'))
+                                    ->default('publish')
+                                    ->required()
+                                    ->live()
+                                    ->options(SkyPlugin::get()->getModel('PostStatus')::pluck('label', 'name')),
 
-                    DateTimePicker::make('published_at')
-                        ->label(__('published at'))
-                        ->required()
-                        ->native(false)
-                        ->default(now()),
+                                TextInput::make('password')
+                                    ->label(__('Password'))
+                                    ->visible(fn (Get $get): bool => $get('status') === 'private'),
 
-                    DateTimePicker::make('sticky_until')
-                        ->native(false)
-                        ->label(__('Sticky Until')),
-                ]),
+                                DateTimePicker::make('published_at')
+                                    ->label(__('published at'))
+                                    ->required()
+                                    ->native(false)
+                                    ->default(now()),
 
-                Tabs\Tab::make(__('Image'))->schema([
-                    Placeholder::make(__('Featured Image')),
+                                DateTimePicker::make('sticky_until')
+                                    ->native(false)
+                                    ->label(__('Sticky Until')),
+                            ]),
 
-                    ToggleButtons::make('featured_image_type')
-                        ->dehydrated(false)
-                        ->hiddenLabel()
-                        ->live()
-                        ->afterStateHydrated(function (Set $set, Get $get) {
-                            $setVal = ($get('featured_image') === null) ? 'upload' : 'url';
-                            $set('featured_image_type', $setVal);
-                        })
-                        ->grouped()
-                        ->options([
-                            'upload' => __('upload'),
-                            'url' => __('url'),
-                        ])
-                        ->default('upload'),
-                    SpatieMediaLibraryFileUpload::make('featured_image_upload')
-                        ->collection('posts')
-                        ->disk(SkyPlugin::get()->getUploadDisk())
-                        ->directory(SkyPlugin::get()->getUploadDirectory())
-                        ->visible(fn (Get $get) => $get('featured_image_type') === 'upload')
-                        ->label(''),
+                        Tab::make(__('Image'))
+                            ->schema([
+                                Placeholder::make(__('Featured Image')),
 
-                    TextInput::make('featured_image')
-                        ->label(__('featured image url'))
-                        ->visible(fn (Get $get) => $get('featured_image_type') === 'url')
-                        ->url(),
-                ]),
-            ])->columnSpan(2),
-        ]);
+                                ToggleButtons::make('featured_image_type')
+                                    ->dehydrated(false)
+                                    ->hiddenLabel()
+                                    ->live()
+                                    ->afterStateHydrated(function (Set $set, Get $get) {
+                                        $setVal = ($get('featured_image') === null) ? 'upload' : 'url';
+                                        $set('featured_image_type', $setVal);
+                                    })
+                                    ->grouped()
+                                    ->options([
+                                        'upload' => __('upload'),
+                                        'url' => __('url'),
+                                    ])
+                                    ->default('upload'),
+                                SpatieMediaLibraryFileUpload::make('featured_image_upload')
+                                    ->collection('posts')
+                                    ->disk(SkyPlugin::get()->getUploadDisk())
+                                    ->directory(SkyPlugin::get()->getUploadDirectory())
+                                    ->visible(fn (Get $get) => $get('featured_image_type') === 'upload')
+                                    ->label(''),
+
+                                TextInput::make('featured_image')
+                                    ->label(__('featured image url'))
+                                    ->visible(fn (Get $get) => $get('featured_image_type') === 'url')
+                                    ->url(),
+                            ]),
+                    ])
+                    ->columnSpan(2),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -276,7 +286,10 @@ class PostResource extends SkyResource
                 ->icon('heroicon-o-arrow-top-right-on-square')
                 ->label(__('Open'))
                 ->visible(! config('zeus-sky.headless'))
-                ->url(fn (Post $record): string => route(SkyPlugin::get()->getRouteNamePrefix() . 'post', ['slug' => $record]))
+                ->url(fn (Post $record): string => route(
+                    SkyPlugin::get()->getRouteNamePrefix() . 'post',
+                    ['slug' => $record]
+                ))
                 ->openUrlInNewTab(),
             DeleteAction::make('delete'),
             ForceDeleteAction::make(),
@@ -289,7 +302,10 @@ class PostResource extends SkyResource
         ) {
             // @phpstan-ignore-next-line
             $action[] = \LaraZeus\Helen\Actions\ShortUrlAction::make('get-link')
-                ->distUrl(fn (Post $record): string => route(SkyPlugin::get()->getRouteNamePrefix() . 'post', ['slug' => $record]));
+                ->distUrl(fn (Post $record): string => route(
+                    SkyPlugin::get()->getRouteNamePrefix() . 'post',
+                    ['slug' => $record]
+                ));
         }
 
         return [ActionGroup::make($action)];
