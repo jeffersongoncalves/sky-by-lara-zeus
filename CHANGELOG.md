@@ -2,6 +2,14 @@
 
 All notable changes to `sky` will be documented in this file
 
+## v3.4.22 - 2025-03-13
+
+### What's Changed
+
+* fix unique slug validation by @atmonshi in https://github.com/lara-zeus/sky/pull/227
+
+**Full Changelog**: https://github.com/lara-zeus/sky/compare/v3.4.21...v3.4.22
+
 ## v3.4.21 - 2025-03-07
 
 ### What's Changed
@@ -287,6 +295,7 @@ in your panel provider you can hide any resource from the side nav
 
 
 
+
 ```
 for more check out the docs:
 https://larazeus.com/docs/sky/v3/getting-started/configuration
@@ -398,6 +407,7 @@ Since [tiptap editor](https://github.com/awcodes/filament-tiptap-editor) still i
 
 
 
+
 ```
 #### What's Changed
 
@@ -475,11 +485,13 @@ Make sure to add this to your config:
 
 
 
+
 ```
 You can copy that class and create your own parser, too, then add it to the array, and Sky will loop them all.
 
 ```I
 Of course, it will be visible only if you install Sky with Bolt :)
+
 
 
 
@@ -563,7 +575,6 @@ Of course, it will be visible only if you install Sky with Bolt :)
 ## 2.3.7 - 2022-11-12
 ### What's Changed
 - small fixes in FAQ by @atmonshi in https://github.com/lara-zeus/sky/pull/62
-
 **Full Changelog**: https://github.com/lara-zeus/sky/compare/2.3.6...2.3.7
 
 ## 2.3.6 - 2022-11-12
