@@ -89,7 +89,7 @@ class PageResource extends SkyResource
                         ->hint(__('Write an excerpt for your page')),
 
                     TextInput::make('slug')
-                        ->unique(ignorable: fn (?Post $record): ?Post => $record)
+                        ->unique(ignoreRecord: true)
                         ->required()
                         ->maxLength(255)
                         ->label(__('Page Slug')),

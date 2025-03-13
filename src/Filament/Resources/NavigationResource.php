@@ -2,7 +2,6 @@
 
 namespace LaraZeus\Sky\Filament\Resources;
 
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -58,12 +57,13 @@ class NavigationResource extends SkyResource
                         12,
                         'lg' => 8,
                     ]),
-                Group::make([
-                    Section::make('')->schema([
+                Section::make()
+                    ->hiddenLabel()
+                    ->schema([
                         TextInput::make('handle')
                             ->label(__('zeus-sky::filament-navigation.attributes.handle'))
                             ->required()
-                            ->unique(column: 'handle', ignoreRecord: true),
+                            ->unique(ignoreRecord: true),
                         View::make('zeus::filament.card-divider')
                             ->visible(static::$showTimestamps),
                         Placeholder::make('created_at')
@@ -74,8 +74,7 @@ class NavigationResource extends SkyResource
                             ->label(__('zeus-sky::filament-navigation.attributes.updated_at'))
                             ->visible(static::$showTimestamps)
                             ->content(fn (?Navigation $record) => $record ? $record->updated_at->translatedFormat(Table::$defaultDateTimeDisplayFormat) : new HtmlString('&mdash;')),
-                    ]),
-                ])
+                    ])
                     ->columnSpan([
                         12,
                         'lg' => 4,

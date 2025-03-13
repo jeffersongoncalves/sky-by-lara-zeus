@@ -59,7 +59,7 @@ class LibraryResource extends SkyResource
                             }),
 
                         TextInput::make('slug')
-                            ->unique(ignorable: fn (?Library $record): ?Library => $record)
+                            ->unique(ignoreRecord: true)
                             ->required()
                             ->maxLength(255)
                             ->label(__('Library Slug')),

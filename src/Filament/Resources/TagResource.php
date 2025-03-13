@@ -14,10 +14,10 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use LaraZeus\Sky\Filament\Resources\TagResource\Pages;
 use LaraZeus\Sky\Models\Tag;
+use LaraZeus\Sky\Rules\UniqueTranslationRule;
 use LaraZeus\Sky\SkyPlugin;
 
 class TagResource extends SkyResource
@@ -47,7 +47,9 @@ class TagResource extends SkyResource
                                 $set('slug', Str::slug($state));
                             }),
                         TextInput::make('slug')
-                            ->unique(ignorable: fn (?Model $record): ?Model => $record)
+                            ->rules(function ($record) {
+                                return [new UniqueTranslationRule(Tag::class, $record)];
+                            })
                             ->required()
                             ->maxLength(255),
                         Select::make('type')
